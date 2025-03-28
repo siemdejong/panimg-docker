@@ -6,8 +6,11 @@ FROM ghcr.io/astral-sh/uv:${uv_version}-python${python_major_version}.${python_m
 ARG panimg_version=0.15.2
 
 RUN apt-get update && apt-get install -y \
+    # For panimg.
     libopenslide-dev \
     libvips-dev \
+    # For interactive jobs over ssh.
+    openssh-server \
     && rm -rf /var/lib/apt/lists/*
 
 ENV UV_SYSTEM_PYTHON=1

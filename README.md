@@ -15,6 +15,12 @@ docker run \
     convert /path/to/files/ /where/files/will/go/
 ```
 
+or interactively
+
+```sh
+docker run -it --entrypoint /bin/bash ghcr.io/siemdejong/panimg-docker
+```
+
 ### SLURM with Pyxis: sbatch
 ```sh
 #!/bin/bash
