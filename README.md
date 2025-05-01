@@ -1,4 +1,5 @@
 # panimg-docker
+[![CI](https://github.com/siemdejong/panimg-docker/actions/workflows/ci.yml/badge.svg)](https://github.com/siemdejong/panimg-docker/actions/workflows/ci.yml)
 
 Provides an unofficial Docker image with [`panimg`](https://github.com/DIAGNijmegen/rse-panimg).
 Images are generated monthly.
