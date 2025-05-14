@@ -42,14 +42,37 @@ jobs:
           CURRENT_VERSION=$(poetry version | awk '{print $2}')
           echo "CURRENT_VERSION=$CURRENT_VERSION"
           echo "CURRENT_VERSION=$CURRENT_VERSION" >> "$GITHUB_OUTPUT"
-  docker:
+  build-docker:
     needs: check-version
     runs-on: ubuntu-latest
+    env:
+      CURRENT_VERSION: ${{ needs.check-version.outputs.CURRENT_VERSION }}
+    name: Build Docker image
+    steps:
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Build Docker image
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          build-args: panimg_version=${{ env.CURRENT_VERSION }}
+          push: false
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}:${{ env.CURRENT_VERSION }}
+
+  push-docker:
+    needs: build-docker
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     permissions:
       packages: write
     env:
       CURRENT_VERSION: ${{ needs.check-version.outputs.CURRENT_VERSION }}
-    name: Build and push Docker image
+    name: Push Docker image
     steps:
       -
         name: Login to Docker Hub
@@ -59,16 +82,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      -
-        name: Build and push
+        name: Push Docker image
         id: push
         uses: docker/build-push-action@v6
         with:
-          build-args: panimg_version=${{ env.CURRENT_VERSION }}
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}:${{ env.CURRENT_VERSION }}
