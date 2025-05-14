@@ -14,6 +14,6 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 ENV UV_SYSTEM_PYTHON=1
-RUN uv pip install "panimg==${panimg_version}[isyntax]"
+RUN uv pip install "panimg[isyntax]==${panimg_version}" --no-cache
 
 ENTRYPOINT ["panimg"]
