@@ -28,10 +28,10 @@ jobs:
        CURRENT_VERSION: ${{ steps.current-version.outputs.CURRENT_VERSION }}
     steps:
       - name: Install Python ${{ env.MINIMUM_PYTHON_VERSION }}
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ env.MINIMUM_PYTHON_VERSION }}
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
         with:
           repository: 'diagnijmegen/rse-panimg'
       - name: Get current package version
@@ -49,14 +49,17 @@ jobs:
       CURRENT_VERSION: ${{ needs.check-version.outputs.CURRENT_VERSION }}
     name: Build Docker image
     steps:
-      -
-        name: Set up QEMU
+      - name: Fail if CURRENT_VERSION is empty
+        run: |
+          if [ -z "${{ env.CURRENT_VERSION }}" ]; then
+            echo "CURRENT_VERSION not set, aborting build."
+            exit 1
+          fi
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-      -
-        name: Set up Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      -
-        name: Build Docker image
+      - name: Build Docker image
         id: build
         uses: docker/build-push-action@v6
         with:
