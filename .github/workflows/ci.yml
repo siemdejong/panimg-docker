@@ -68,7 +68,9 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}:${{ env.CURRENT_VERSION }}
 
   push-docker:
-    needs: build-docker
+    needs:
+      - check-version
+      - build-docker
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     permissions:
