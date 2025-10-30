@@ -70,7 +70,7 @@ jobs:
   push-docker:
     needs: build-docker
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     permissions:
       packages: write
     env:
