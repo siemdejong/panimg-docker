@@ -29,7 +29,7 @@ docker run -it --entrypoint /bin/bash ghcr.io/siemdejong/panimg-docker
 #SBATCH --ntasks=1
 #SBATCH --container-image="ghcr.io#siemdejong/panimg-docker"
 #SBATCH --container-mounts=/path/to/files/:/path/to/files/,/where/files/will/go/:/where/files/will/go/
-panimg convert /path/to/files/:/path/to/files/ /where/files/will/go/:/where/files/will/go/
+panimg convert /path/to/files/ /where/files/will/go/
 ```
 
 ### SLURM with Pyxis: srun
@@ -37,7 +37,7 @@ panimg convert /path/to/files/:/path/to/files/ /where/files/will/go/:/where/file
 srun \
     --container-image ghcr.io#siemdejong/panimg-docker \
     --no-container-entrypoint \
-    --container-mounts=/path/to/files/:/path/to/files/:/path/to/files/:/path/to/files/,/where/files/will/go/:/where/files/will/go/ \
+    --container-mounts=/path/to/files/:/path/to/files/,/where/files/will/go/:/where/files/will/go/ \
     panimg convert /path/to/files/ /where/files/will/go/
 ```
 
